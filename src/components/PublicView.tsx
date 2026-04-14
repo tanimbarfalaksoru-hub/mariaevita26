@@ -49,7 +49,7 @@ export default function PublicView({ state, switchView, showToast, showLoader, h
   return (
     <div className="flex flex-col min-h-screen bg-slate-50 w-full">
       {/* Navbar */}
-      <nav className="sticky top-0 z-[60] bg-white/90 backdrop-blur-xl border-b border-slate-200 w-full transition-all duration-300">
+      <nav className="fixed lg:sticky top-0 left-0 right-0 z-[60] bg-white/90 backdrop-blur-xl border-b border-slate-200 w-full transition-all duration-300">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-20 items-center">
             <div className="flex items-center">
@@ -116,7 +116,7 @@ export default function PublicView({ state, switchView, showToast, showLoader, h
         </AnimatePresence>
       </nav>
 
-      <main className="flex-grow w-full">
+      <main className="flex-grow w-full pt-20 lg:pt-0">
         {/* Hero Section */}
         <section id="home" className="relative overflow-hidden bg-white py-20 lg:py-32 w-full">
           <div className="absolute top-0 left-[-5%] w-72 h-72 bg-indigo-100 rounded-full mix-blend-multiply filter blur-3xl opacity-50 animate-pulse pointer-events-none"></div>
@@ -173,7 +173,7 @@ export default function PublicView({ state, switchView, showToast, showLoader, h
         </section>
 
         {/* About Section */}
-        <section id="about" className="py-24 bg-slate-50 border-t border-slate-100">
+        <section id="about" className="py-24 bg-slate-50 border-t border-slate-100 scroll-mt-20">
           <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
               <span className="text-indigo-600 font-bold tracking-widest uppercase text-xs mb-2 block">Profil Pendidik</span>
@@ -211,7 +211,7 @@ export default function PublicView({ state, switchView, showToast, showLoader, h
         </section>
 
         {/* Subjects Section */}
-        <section id="subjects" className="py-24 bg-white border-t border-slate-100">
+        <section id="subjects" className="py-24 bg-white border-t border-slate-100 scroll-mt-20">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
               <span className="text-indigo-600 font-bold tracking-widest uppercase text-xs mb-2 block">Keahlian Mengajar</span>
@@ -239,7 +239,7 @@ export default function PublicView({ state, switchView, showToast, showLoader, h
         </section>
 
         {/* Projects Section */}
-        <section id="projects" className="py-24 bg-slate-50 border-t border-slate-100">
+        <section id="projects" className="py-24 bg-slate-50 border-t border-slate-100 scroll-mt-20">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
               <span className="text-indigo-600 font-bold tracking-widest uppercase text-xs mb-2 block">Hasil Dedikasi</span>
@@ -272,7 +272,7 @@ export default function PublicView({ state, switchView, showToast, showLoader, h
         </section>
 
         {/* Gallery Section */}
-        <section id="gallery" className="py-24 bg-slate-50 border-t border-slate-100">
+        <section id="gallery" className="py-24 bg-slate-50 border-t border-slate-100 scroll-mt-20">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
               <span className="text-indigo-600 font-bold tracking-widest uppercase text-xs mb-2 block">Dokumentasi</span>
@@ -298,7 +298,7 @@ export default function PublicView({ state, switchView, showToast, showLoader, h
         </section>
 
         {/* Contact Section */}
-        <section id="contact" className="py-24 bg-slate-900 text-white relative overflow-hidden">
+        <section id="contact" className="py-24 bg-slate-900 text-white relative overflow-hidden scroll-mt-20">
           <div className="absolute top-0 right-0 w-96 h-96 rounded-full bg-indigo-600/20 filter blur-3xl pointer-events-none"></div>
           <div className="absolute bottom-0 left-0 w-96 h-96 rounded-full bg-blue-600/20 filter blur-3xl pointer-events-none"></div>
           
