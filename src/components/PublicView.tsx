@@ -1,12 +1,13 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { callBackend, WA_NUMBER } from '../gas-api';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
   Home, User, BookOpen, Briefcase, FileText, Image as ImageIcon, 
-  Menu, X, ArrowRight, Send, Eye, Target, BookOpenCheck 
+  Menu, X, ArrowRight, Send, Eye, Target, BookOpenCheck,
+  Moon, Sun
 } from 'lucide-react';
 
-export default function PublicView({ state, switchView, showToast, showLoader, hideLoader }: any) {
+export default function PublicView({ state, switchView, showToast, showLoader, hideLoader, isDarkMode, toggleDarkMode }: any) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const p = state.profile;
 
@@ -47,13 +48,13 @@ export default function PublicView({ state, switchView, showToast, showLoader, h
   ];
 
   return (
-    <div className="flex flex-col min-h-screen bg-slate-50 w-full">
+    <div className="flex flex-col min-h-screen bg-slate-50 dark:bg-slate-900 w-full transition-colors duration-300">
       {/* Navbar */}
-      <nav className="fixed lg:sticky top-0 left-0 right-0 z-[60] bg-white/90 backdrop-blur-xl border-b border-slate-200 w-full transition-all duration-300">
+      <nav className="fixed lg:sticky top-0 left-0 right-0 z-[60] bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl border-b border-slate-200 dark:border-slate-800 w-full transition-all duration-300">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-20 items-center">
             <div className="flex items-center">
-              <span className="font-extrabold text-2xl tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-blue-600">
+              <span className="font-extrabold text-2xl tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-blue-600 dark:from-indigo-400 dark:to-blue-400">
                 {p.logoText || (p.name ? p.name.split(' ')[0] + '.' : 'Edukasi.')}
               </span>
             </div>
@@ -61,26 +62,32 @@ export default function PublicView({ state, switchView, showToast, showLoader, h
             {/* Desktop Menu */}
             <div className="hidden lg:flex items-center space-x-2">
               {navLinks.map((link, i) => (
-                <a key={i} href={link.href} className="group flex items-center justify-center bg-transparent hover:bg-indigo-50 rounded-full h-10 px-4 transition-all duration-300">
-                  <link.icon className="w-5 h-5 text-slate-500 group-hover:text-indigo-600 transition-colors" />
-                  <span className="max-w-0 overflow-hidden whitespace-nowrap group-hover:max-w-xs group-hover:ml-2 text-indigo-600 font-bold tracking-wide transition-all duration-300 ease-in-out opacity-0 group-hover:opacity-100">
+                <a key={i} href={link.href} className="group flex items-center justify-center bg-transparent hover:bg-indigo-50 dark:hover:bg-slate-800 rounded-full h-10 px-4 transition-all duration-300">
+                  <link.icon className="w-5 h-5 text-slate-500 dark:text-slate-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors" />
+                  <span className="max-w-0 overflow-hidden whitespace-nowrap group-hover:max-w-xs group-hover:ml-2 text-indigo-600 dark:text-indigo-400 font-bold tracking-wide transition-all duration-300 ease-in-out opacity-0 group-hover:opacity-100">
                     {link.label}
                   </span>
                 </a>
               ))}
-              <div className="pl-4 ml-2 border-l border-slate-200 flex items-center gap-3">
-                <a href="#contact" className="px-6 py-2.5 bg-slate-900 text-white font-bold rounded-full hover:bg-indigo-600 transition-colors inline-block text-sm">
+              <div className="pl-4 ml-2 border-l border-slate-200 dark:border-slate-700 flex items-center gap-3">
+                <button onClick={toggleDarkMode} className="p-2 text-slate-500 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400 bg-slate-100 dark:bg-slate-800 rounded-full transition-colors">
+                  {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+                </button>
+                <a href="#contact" className="px-6 py-2.5 bg-slate-900 dark:bg-indigo-600 text-white font-bold rounded-full hover:bg-indigo-600 dark:hover:bg-indigo-500 transition-colors inline-block text-sm">
                   Hubungi
                 </a>
-                <button onClick={() => switchView('login')} className="px-5 py-2.5 bg-indigo-50 text-indigo-700 font-bold rounded-full hover:bg-indigo-100 transition-colors inline-block text-sm border border-indigo-100">
+                <button onClick={() => switchView('login')} className="px-5 py-2.5 bg-indigo-50 dark:bg-slate-800 text-indigo-700 dark:text-indigo-300 font-bold rounded-full hover:bg-indigo-100 dark:hover:bg-slate-700 transition-colors inline-block text-sm border border-indigo-100 dark:border-slate-700">
                   Admin CMS
                 </button>
               </div>
             </div>
 
             {/* Mobile Menu Toggle */}
-            <div className="flex items-center lg:hidden">
-              <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="text-slate-700 hover:text-indigo-600 p-2 bg-slate-100 rounded-xl transition-colors">
+            <div className="flex items-center lg:hidden gap-3">
+              <button onClick={toggleDarkMode} className="p-2 text-slate-500 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400 bg-slate-100 dark:bg-slate-800 rounded-full transition-colors">
+                {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+              </button>
+              <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="text-slate-700 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 p-2 bg-slate-100 dark:bg-slate-800 rounded-xl transition-colors">
                 {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
               </button>
             </div>
@@ -94,19 +101,19 @@ export default function PublicView({ state, switchView, showToast, showLoader, h
               initial={{ height: 0, opacity: 0 }}
               animate={{ height: 'auto', opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
-              className="lg:hidden bg-white absolute w-full shadow-2xl rounded-b-3xl border-t border-slate-100 overflow-hidden z-[60]"
+              className="lg:hidden bg-white dark:bg-slate-900 absolute w-full shadow-2xl rounded-b-3xl border-t border-slate-100 dark:border-slate-800 overflow-hidden z-[60]"
             >
               <div className="px-4 py-6 flex flex-col space-y-2">
                 {navLinks.map((link, i) => (
-                  <a key={i} href={link.href} onClick={() => setMobileMenuOpen(false)} className="px-4 py-3 text-slate-700 hover:bg-indigo-50 hover:text-indigo-600 rounded-xl font-bold transition-colors flex items-center gap-4">
-                    <link.icon className="w-5 h-5 text-indigo-500" /> {link.label}
+                  <a key={i} href={link.href} onClick={() => setMobileMenuOpen(false)} className="px-4 py-3 text-slate-700 dark:text-slate-300 hover:bg-indigo-50 dark:hover:bg-slate-800 hover:text-indigo-600 dark:hover:text-indigo-400 rounded-xl font-bold transition-colors flex items-center gap-4">
+                    <link.icon className="w-5 h-5 text-indigo-500 dark:text-indigo-400" /> {link.label}
                   </a>
                 ))}
-                <div className="pt-4 mt-2 border-t border-slate-100 flex flex-col gap-2">
-                  <a href="#contact" onClick={() => setMobileMenuOpen(false)} className="px-4 py-3 bg-indigo-600 text-white rounded-xl font-bold text-center block hover:bg-indigo-700 transition-colors shadow-md">
+                <div className="pt-4 mt-2 border-t border-slate-100 dark:border-slate-800 flex flex-col gap-2">
+                  <a href="#contact" onClick={() => setMobileMenuOpen(false)} className="px-4 py-3 bg-indigo-600 dark:bg-indigo-500 text-white rounded-xl font-bold text-center block hover:bg-indigo-700 dark:hover:bg-indigo-600 transition-colors shadow-md">
                     Hubungi Saya
                   </a>
-                  <button onClick={() => { setMobileMenuOpen(false); switchView('login'); }} className="px-4 py-3 bg-slate-100 text-slate-700 rounded-xl font-bold text-center block hover:bg-slate-200 transition-colors">
+                  <button onClick={() => { setMobileMenuOpen(false); switchView('login'); }} className="px-4 py-3 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-xl font-bold text-center block hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
                     Panel Admin CMS
                   </button>
                 </div>
@@ -118,9 +125,9 @@ export default function PublicView({ state, switchView, showToast, showLoader, h
 
       <main className="flex-grow w-full pt-20 lg:pt-0">
         {/* Hero Section */}
-        <section id="home" className="relative overflow-hidden bg-white py-20 lg:py-32 w-full">
-          <div className="absolute top-0 left-[-5%] w-72 h-72 bg-indigo-100 rounded-full mix-blend-multiply filter blur-3xl opacity-50 animate-pulse pointer-events-none"></div>
-          <div className="absolute top-0 right-[-5%] w-72 h-72 bg-blue-100 rounded-full mix-blend-multiply filter blur-3xl opacity-50 animate-pulse pointer-events-none" style={{ animationDelay: '2s' }}></div>
+        <section id="home" className="relative overflow-hidden bg-white dark:bg-slate-900 py-20 lg:py-32 w-full transition-colors duration-300">
+          <div className="absolute top-0 left-[-5%] w-72 h-72 bg-indigo-100 dark:bg-indigo-900/30 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-50 animate-pulse pointer-events-none"></div>
+          <div className="absolute top-0 right-[-5%] w-72 h-72 bg-blue-100 dark:bg-blue-900/30 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-50 animate-pulse pointer-events-none" style={{ animationDelay: '2s' }}></div>
           
           <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center z-10">
             <motion.div 
@@ -130,13 +137,13 @@ export default function PublicView({ state, switchView, showToast, showLoader, h
               className="relative inline-block mb-8"
             >
               <div className="absolute inset-0 bg-gradient-to-tr from-indigo-500 to-blue-500 rounded-full blur-lg opacity-40"></div>
-              <img src={p.photoUrl || 'https://via.placeholder.com/150'} alt="Profile" className="relative w-40 h-40 md:w-48 md:h-48 rounded-full mx-auto object-cover border-4 border-white shadow-xl ring-4 ring-indigo-50" />
+              <img src={p.photoUrl || 'https://via.placeholder.com/150'} alt="Profile" className="relative w-40 h-40 md:w-48 md:h-48 rounded-full mx-auto object-cover border-4 border-white dark:border-slate-800 shadow-xl ring-4 ring-indigo-50 dark:ring-indigo-900/50" />
             </motion.div>
             <motion.h1 
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.2 }}
-              className="text-4xl md:text-6xl font-extrabold text-slate-900 tracking-tight mb-4"
+              className="text-4xl md:text-6xl font-extrabold text-slate-900 dark:text-white tracking-tight mb-4"
             >
               {p.name || 'Nama Pendidik'}
             </motion.h1>
@@ -144,7 +151,7 @@ export default function PublicView({ state, switchView, showToast, showLoader, h
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.3 }}
-              className="text-xl md:text-2xl text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-blue-600 font-extrabold mb-6"
+              className="text-xl md:text-2xl text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-blue-600 dark:from-indigo-400 dark:to-blue-400 font-extrabold mb-6"
             >
               {p.role || 'Profesi / Role'}
             </motion.p>
@@ -152,7 +159,7 @@ export default function PublicView({ state, switchView, showToast, showLoader, h
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.4 }}
-              className="max-w-2xl mx-auto text-lg text-slate-600 mb-10 leading-relaxed font-medium"
+              className="max-w-2xl mx-auto text-lg text-slate-600 dark:text-slate-300 mb-10 leading-relaxed font-medium"
             >
               {p.heroText || 'Mendidik dengan hati, menginspirasi dengan karya.'}
             </motion.p>
@@ -162,10 +169,10 @@ export default function PublicView({ state, switchView, showToast, showLoader, h
               transition={{ delay: 0.5 }}
               className="flex flex-col sm:flex-row justify-center gap-4"
             >
-              <a href="#projects" className="bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-3.5 rounded-full font-bold transition-all shadow-lg shadow-indigo-200 hover:-translate-y-0.5 text-center">
+              <a href="#projects" className="bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-3.5 rounded-full font-bold transition-all shadow-lg shadow-indigo-200 dark:shadow-indigo-900/20 hover:-translate-y-0.5 text-center">
                 Lihat Portofolio
               </a>
-              <a href="#about" className="bg-white text-slate-700 hover:text-indigo-600 border border-slate-200 hover:border-indigo-200 px-8 py-3.5 rounded-full font-bold transition-all shadow-sm hover:shadow-md hover:-translate-y-0.5 text-center">
+              <a href="#about" className="bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:text-indigo-600 dark:hover:text-indigo-400 border border-slate-200 dark:border-slate-700 hover:border-indigo-200 dark:hover:border-indigo-500 px-8 py-3.5 rounded-full font-bold transition-all shadow-sm hover:shadow-md hover:-translate-y-0.5 text-center">
                 Kenali Saya
               </a>
             </motion.div>
@@ -173,36 +180,36 @@ export default function PublicView({ state, switchView, showToast, showLoader, h
         </section>
 
         {/* About Section */}
-        <section id="about" className="py-24 bg-slate-50 border-t border-slate-100 scroll-mt-20">
+        <section id="about" className="py-24 bg-slate-50 dark:bg-slate-800/50 border-t border-slate-100 dark:border-slate-800 scroll-mt-20 transition-colors duration-300">
           <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
-              <span className="text-indigo-600 font-bold tracking-widest uppercase text-xs mb-2 block">Profil Pendidik</span>
-              <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-4">Tentang Saya</h2>
-              <div className="w-16 h-1.5 bg-indigo-600 mx-auto rounded-full"></div>
+              <span className="text-indigo-600 dark:text-indigo-400 font-bold tracking-widest uppercase text-xs mb-2 block">Profil Pendidik</span>
+              <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white mb-4">Tentang Saya</h2>
+              <div className="w-16 h-1.5 bg-indigo-600 dark:bg-indigo-500 mx-auto rounded-full"></div>
             </div>
             
-            <div className="bg-white p-8 md:p-12 rounded-3xl shadow-sm border border-slate-200 mb-12">
-              <p className="text-slate-700 leading-relaxed text-lg whitespace-pre-line text-center font-medium">
+            <div className="bg-white dark:bg-slate-800 p-8 md:p-12 rounded-3xl shadow-sm border border-slate-200 dark:border-slate-700 mb-12 transition-colors duration-300">
+              <p className="text-slate-700 dark:text-slate-300 leading-relaxed text-lg whitespace-pre-line text-center font-medium">
                 {p.bio || 'Deskripsi detail tentang diri saya.'}
               </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div className="bg-white p-8 rounded-3xl shadow-sm border border-slate-200 relative overflow-hidden group hover:shadow-md transition-shadow">
-                <div className="w-14 h-14 bg-indigo-50 rounded-2xl flex items-center justify-center mb-6">
-                  <Eye className="w-7 h-7 text-indigo-600" />
+              <div className="bg-white dark:bg-slate-800 p-8 rounded-3xl shadow-sm border border-slate-200 dark:border-slate-700 relative overflow-hidden group hover:shadow-md transition-all duration-300">
+                <div className="w-14 h-14 bg-indigo-50 dark:bg-indigo-900/30 rounded-2xl flex items-center justify-center mb-6">
+                  <Eye className="w-7 h-7 text-indigo-600 dark:text-indigo-400" />
                 </div>
-                <h3 className="text-2xl font-extrabold text-slate-900 mb-4">Visi</h3>
-                <p className="text-slate-600 leading-relaxed whitespace-pre-line font-medium">
+                <h3 className="text-2xl font-extrabold text-slate-900 dark:text-white mb-4">Visi</h3>
+                <p className="text-slate-600 dark:text-slate-300 leading-relaxed whitespace-pre-line font-medium">
                   {p.visi || 'Belum ada data visi.'}
                 </p>
               </div>
-              <div className="bg-white p-8 rounded-3xl shadow-sm border border-slate-200 relative overflow-hidden group hover:shadow-md transition-shadow">
-                <div className="w-14 h-14 bg-blue-50 rounded-2xl flex items-center justify-center mb-6">
-                  <Target className="w-7 h-7 text-blue-600" />
+              <div className="bg-white dark:bg-slate-800 p-8 rounded-3xl shadow-sm border border-slate-200 dark:border-slate-700 relative overflow-hidden group hover:shadow-md transition-all duration-300">
+                <div className="w-14 h-14 bg-blue-50 dark:bg-blue-900/30 rounded-2xl flex items-center justify-center mb-6">
+                  <Target className="w-7 h-7 text-blue-600 dark:text-blue-400" />
                 </div>
-                <h3 className="text-2xl font-extrabold text-slate-900 mb-4">Misi</h3>
-                <p className="text-slate-600 leading-relaxed whitespace-pre-line font-medium">
+                <h3 className="text-2xl font-extrabold text-slate-900 dark:text-white mb-4">Misi</h3>
+                <p className="text-slate-600 dark:text-slate-300 leading-relaxed whitespace-pre-line font-medium">
                   {p.misi || 'Belum ada data misi.'}
                 </p>
               </div>
@@ -211,25 +218,25 @@ export default function PublicView({ state, switchView, showToast, showLoader, h
         </section>
 
         {/* Subjects Section */}
-        <section id="subjects" className="py-24 bg-white border-t border-slate-100 scroll-mt-20">
+        <section id="subjects" className="py-24 bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 scroll-mt-20 transition-colors duration-300">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
-              <span className="text-indigo-600 font-bold tracking-widest uppercase text-xs mb-2 block">Keahlian Mengajar</span>
-              <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-4">Mata Pelajaran</h2>
-              <div className="w-16 h-1.5 bg-indigo-600 mx-auto rounded-full"></div>
+              <span className="text-indigo-600 dark:text-indigo-400 font-bold tracking-widest uppercase text-xs mb-2 block">Keahlian Mengajar</span>
+              <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white mb-4">Mata Pelajaran</h2>
+              <div className="w-16 h-1.5 bg-indigo-600 dark:bg-indigo-500 mx-auto rounded-full"></div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {state.subjects.length === 0 ? (
-                <p className="text-slate-500 text-center col-span-full font-medium py-10 border-2 border-dashed border-slate-200 rounded-2xl">Belum ada mata pelajaran.</p>
+                <p className="text-slate-500 dark:text-slate-400 text-center col-span-full font-medium py-10 border-2 border-dashed border-slate-200 dark:border-slate-700 rounded-2xl">Belum ada mata pelajaran.</p>
               ) : (
                 state.subjects.map((sub: any) => (
-                  <div key={sub.id} className="bg-slate-50 p-6 md:p-8 rounded-3xl border border-slate-100 flex items-start gap-5 hover:bg-white hover:shadow-md transition-all">
-                    <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center flex-shrink-0 shadow-sm border border-slate-100">
-                      <BookOpenCheck className="w-7 h-7 text-indigo-600" />
+                  <div key={sub.id} className="bg-slate-50 dark:bg-slate-800/50 p-6 md:p-8 rounded-3xl border border-slate-100 dark:border-slate-700 flex items-start gap-5 hover:bg-white dark:hover:bg-slate-800 hover:shadow-md transition-all duration-300">
+                    <div className="w-14 h-14 bg-white dark:bg-slate-700 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-sm border border-slate-100 dark:border-slate-600">
+                      <BookOpenCheck className="w-7 h-7 text-indigo-600 dark:text-indigo-400" />
                     </div>
                     <div>
-                      <h3 className="text-xl font-extrabold text-slate-900 mb-2">{sub.name}</h3>
-                      <p className="text-slate-600 text-sm leading-relaxed font-medium">{sub.desc}</p>
+                      <h3 className="text-xl font-extrabold text-slate-900 dark:text-white mb-2">{sub.name}</h3>
+                      <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed font-medium">{sub.desc}</p>
                     </div>
                   </div>
                 ))
@@ -239,27 +246,27 @@ export default function PublicView({ state, switchView, showToast, showLoader, h
         </section>
 
         {/* Projects Section */}
-        <section id="projects" className="py-24 bg-slate-50 border-t border-slate-100 scroll-mt-20">
+        <section id="projects" className="py-24 bg-slate-50 dark:bg-slate-800/50 border-t border-slate-100 dark:border-slate-800 scroll-mt-20 transition-colors duration-300">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
-              <span className="text-indigo-600 font-bold tracking-widest uppercase text-xs mb-2 block">Hasil Dedikasi</span>
-              <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-4">Portofolio Karya</h2>
-              <div className="w-16 h-1.5 bg-indigo-600 mx-auto rounded-full"></div>
+              <span className="text-indigo-600 dark:text-indigo-400 font-bold tracking-widest uppercase text-xs mb-2 block">Hasil Dedikasi</span>
+              <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white mb-4">Portofolio Karya</h2>
+              <div className="w-16 h-1.5 bg-indigo-600 dark:bg-indigo-500 mx-auto rounded-full"></div>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
               {state.projects.length === 0 ? (
-                <p className="text-slate-500 text-center col-span-full font-medium py-10 border-2 border-dashed border-slate-200 rounded-2xl">Belum ada portofolio.</p>
+                <p className="text-slate-500 dark:text-slate-400 text-center col-span-full font-medium py-10 border-2 border-dashed border-slate-200 dark:border-slate-700 rounded-2xl">Belum ada portofolio.</p>
               ) : (
                 state.projects.map((proj: any) => (
-                  <div key={proj.id} className="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden group hover:shadow-xl transition-all flex flex-col">
+                  <div key={proj.id} className="bg-white dark:bg-slate-800 rounded-3xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden group hover:shadow-xl transition-all duration-300 flex flex-col">
                     <div className="relative overflow-hidden h-56">
                       <img src={proj.image} alt={proj.title} className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500" />
                     </div>
                     <div className="p-6 md:p-8 flex-1 flex flex-col">
-                      <h3 className="text-xl font-extrabold text-slate-900 mb-3 group-hover:text-indigo-600 transition-colors">{proj.title}</h3>
-                      <p className="text-slate-600 text-sm mb-6 leading-relaxed flex-1 font-medium">{proj.desc}</p>
+                      <h3 className="text-xl font-extrabold text-slate-900 dark:text-white mb-3 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">{proj.title}</h3>
+                      <p className="text-slate-600 dark:text-slate-300 text-sm mb-6 leading-relaxed flex-1 font-medium">{proj.desc}</p>
                       {proj.link && (
-                        <a href={proj.link} target="_blank" rel="noreferrer" className="text-indigo-600 hover:text-indigo-800 font-bold text-sm inline-flex items-center mt-auto bg-indigo-50 hover:bg-indigo-100 px-4 py-2 rounded-lg transition-colors w-max">
+                        <a href={proj.link} target="_blank" rel="noreferrer" className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 font-bold text-sm inline-flex items-center mt-auto bg-indigo-50 dark:bg-indigo-900/30 hover:bg-indigo-100 dark:hover:bg-indigo-900/50 px-4 py-2 rounded-lg transition-colors w-max">
                           Kunjungi Tautan <ArrowRight className="w-4 h-4 ml-2" />
                         </a>
                       )}
@@ -272,19 +279,19 @@ export default function PublicView({ state, switchView, showToast, showLoader, h
         </section>
 
         {/* Gallery Section */}
-        <section id="gallery" className="py-24 bg-slate-50 border-t border-slate-100 scroll-mt-20">
+        <section id="gallery" className="py-24 bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 scroll-mt-20 transition-colors duration-300">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
-              <span className="text-indigo-600 font-bold tracking-widest uppercase text-xs mb-2 block">Dokumentasi</span>
-              <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-4">Galeri Kegiatan</h2>
-              <div className="w-16 h-1.5 bg-indigo-600 mx-auto rounded-full"></div>
+              <span className="text-indigo-600 dark:text-indigo-400 font-bold tracking-widest uppercase text-xs mb-2 block">Dokumentasi</span>
+              <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white mb-4">Galeri Kegiatan</h2>
+              <div className="w-16 h-1.5 bg-indigo-600 dark:bg-indigo-500 mx-auto rounded-full"></div>
             </div>
             <div className="columns-1 sm:columns-2 lg:columns-3 gap-6 space-y-6">
               {state.galleries.length === 0 ? (
-                <p className="text-slate-500 text-center col-span-full font-medium py-10 border-2 border-dashed border-slate-200 rounded-2xl">Belum ada foto.</p>
+                <p className="text-slate-500 dark:text-slate-400 text-center col-span-full font-medium py-10 border-2 border-dashed border-slate-200 dark:border-slate-700 rounded-2xl">Belum ada foto.</p>
               ) : (
                 state.galleries.map((gal: any) => (
-                  <div key={gal.id} className="relative group rounded-3xl overflow-hidden break-inside-avoid border border-slate-200 bg-white">
+                  <div key={gal.id} className="relative group rounded-3xl overflow-hidden break-inside-avoid border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800">
                     <img src={gal.image} className="w-full object-cover" />
                     <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col justify-end p-6 text-white">
                       <h4 className="font-extrabold text-lg mb-1">{gal.title}</h4>
@@ -298,7 +305,7 @@ export default function PublicView({ state, switchView, showToast, showLoader, h
         </section>
 
         {/* Contact Section */}
-        <section id="contact" className="py-24 bg-slate-900 text-white relative overflow-hidden scroll-mt-20">
+        <section id="contact" className="py-24 bg-slate-900 dark:bg-slate-950 text-white relative overflow-hidden scroll-mt-20 transition-colors duration-300">
           <div className="absolute top-0 right-0 w-96 h-96 rounded-full bg-indigo-600/20 filter blur-3xl pointer-events-none"></div>
           <div className="absolute bottom-0 left-0 w-96 h-96 rounded-full bg-blue-600/20 filter blur-3xl pointer-events-none"></div>
           
@@ -331,7 +338,7 @@ export default function PublicView({ state, switchView, showToast, showLoader, h
         </section>
       </main>
 
-      <footer className="bg-black text-slate-400 py-10 text-center border-t border-slate-800">
+      <footer className="bg-black dark:bg-slate-950 text-slate-400 py-10 text-center border-t border-slate-800 dark:border-slate-900 transition-colors duration-300">
         <div className="max-w-6xl mx-auto px-4 flex flex-col md:flex-row justify-center items-center gap-6">
           <p className="font-medium text-sm">&copy; {new Date().getFullYear()} <span className="text-white font-bold">{p.name || 'Portofolio'}</span>. All rights reserved.</p>
         </div>

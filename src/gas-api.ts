@@ -1,5 +1,5 @@
-export const GAS_URL = "https://script.google.com/macros/s/AKfycbwrx3WcurjDcErU3XeirdeiP-Sf5U2Me1N9zQBFOZk5FAEja0_RCqt9FoZZwRJVI8WJRw/exec";
-export const WA_NUMBER = "6282248991889";
+export const GAS_URL: string = "https://script.google.com/macros/s/AKfycbwrx3WcurjDcErU3XeirdeiP-Sf5U2Me1N9zQBFOZk5FAEja0_RCqt9FoZZwRJVI8WJRw/exec";
+export const WA_NUMBER: string = "6282248991889";
 
 export async function callBackend(payload: any) {
   if (!GAS_URL || GAS_URL === "URL_DEPLOY_GAS_ANDA_DISINI") {

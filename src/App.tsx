@@ -9,7 +9,7 @@ import LoginView from './components/LoginView';
 import AdminView from './components/AdminView';
 import { fetchPublicData } from './gas-api';
 import { AppState } from './types';
-import { Loader2, CheckCircle2, AlertCircle, GraduationCap } from 'lucide-react';
+import { Loader2, CheckCircle2, AlertCircle, GraduationCap, Moon, Sun } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
 export default function App() {
@@ -26,10 +26,30 @@ export default function App() {
   const [splash, setSplash] = useState(true);
   const [toast, setToast] = useState<{msg: string, isError: boolean} | null>(null);
   const [overlayLoading, setOverlayLoading] = useState<{show: boolean, text: string}>({show: false, text: ''});
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
   useEffect(() => {
+    const savedTheme = localStorage.getItem('portfolio_theme');
+    if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      setIsDarkMode(true);
+      document.documentElement.classList.add('dark');
+    }
     initApp();
   }, []);
+
+  const toggleDarkMode = () => {
+    setIsDarkMode(prev => {
+      const newMode = !prev;
+      if (newMode) {
+        document.documentElement.classList.add('dark');
+        localStorage.setItem('portfolio_theme', 'dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+        localStorage.setItem('portfolio_theme', 'light');
+      }
+      return newMode;
+    });
+  };
 
   const initApp = async () => {
     try {
@@ -69,7 +89,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 font-sans text-slate-900 selection:bg-indigo-200 selection:text-indigo-900">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-900 font-sans text-slate-900 dark:text-slate-50 selection:bg-indigo-200 dark:selection:bg-indigo-900 selection:text-indigo-900 dark:selection:text-indigo-100 transition-colors duration-300">
       <AnimatePresence>
         {splash && (
           <motion.div 
@@ -116,19 +136,19 @@ export default function App() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-white/80 backdrop-blur-sm flex flex-col items-center justify-center z-[80]"
+            className="fixed inset-0 bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm flex flex-col items-center justify-center z-[80]"
           >
-            <Loader2 className="w-12 h-12 text-indigo-600 animate-spin mb-4" />
-            <p className="text-indigo-800 font-bold text-lg animate-pulse">{overlayLoading.text}</p>
+            <Loader2 className="w-12 h-12 text-indigo-600 dark:text-indigo-400 animate-spin mb-4" />
+            <p className="text-indigo-800 dark:text-indigo-300 font-bold text-lg animate-pulse">{overlayLoading.text}</p>
           </motion.div>
         )}
       </AnimatePresence>
 
       {!splash && (
         <main>
-          {view === 'public' && <PublicView state={state} switchView={switchView} showToast={showToast} showLoader={showLoader} hideLoader={hideLoader} />}
-          {view === 'login' && <LoginView switchView={switchView} showToast={showToast} showLoader={showLoader} hideLoader={hideLoader} />}
-          {view === 'admin' && <AdminView state={state} setState={setState} switchView={switchView} showToast={showToast} showLoader={showLoader} hideLoader={hideLoader} />}
+          {view === 'public' && <PublicView state={state} switchView={switchView} showToast={showToast} showLoader={showLoader} hideLoader={hideLoader} isDarkMode={isDarkMode} toggleDarkMode={toggleDarkMode} />}
+          {view === 'login' && <LoginView switchView={switchView} showToast={showToast} showLoader={showLoader} hideLoader={hideLoader} isDarkMode={isDarkMode} toggleDarkMode={toggleDarkMode} />}
+          {view === 'admin' && <AdminView state={state} setState={setState} switchView={switchView} showToast={showToast} showLoader={showLoader} hideLoader={hideLoader} isDarkMode={isDarkMode} toggleDarkMode={toggleDarkMode} />}
         </main>
       )}
     </div>
